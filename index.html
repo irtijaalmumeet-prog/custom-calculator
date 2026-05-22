@@ -1,424 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Advanced Profit Calculator</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-    }
-
-    .calculator {
-      background: white;
-      padding: 25px;
-      border-radius: 15px;
-      width: 450px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    .input-group {
-      margin-bottom: 18px;
-    }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 6px;
-      color: #444;
-    }
-
-    .input-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    input, select {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    input[type="number"] {
-      flex: 1;
-    }
-
-    .qty {
-      width: 80px;
-    }
-
-    .currency {
-      width: 110px;
-    }
-
-    small {
-      display: block;
-      margin-top: 5px;
-      color: #666;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-      margin-top: 10px;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-
-    .result {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 10px;
-      background: #f1f1f1;
-      text-align: center;
-    }
-
-    .profit {
-      color: green;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .loss {
-      color: red;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .details {
-      margin-top: 10px;
-      color: #555;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Profit Calculator</title>
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#f4f6f9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    margin:0;
+    padding:20px;
+}
+.calculator{
+    background:#fff;
+    width:100%;
+    max-width:520px;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 4px 18px rgba(0,0,0,0.1);
+}
+h1{
+    text-align:center;
+    margin-bottom:25px;
+    color:#222;
+}
+.input-group{
+    margin-bottom:18px;
+}
+label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:bold;
+    color:#333;
+}
+.input-row{
+    display:flex;
+    gap:8px;
+}
+.input-row input{
+    flex:1;
+}
+input,
+select{
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    font-size:15px;
+    box-sizing:border-box;
+}
+.qty{
+    width:80px;
+}
+.currency{
+    width:120px;
+}
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:#005eff;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+    margin-top:10px;
+}
+button:hover{
+    background:#0047c7;
+}
+.result{
+    margin-top:20px;
+    padding:18px;
+    border-radius:12px;
+    background:#f1f1f1;
+    text-align:center;
+}
+.profit{
+    color:green;
+    font-size:26px;
+    font-weight:bold;
+}
+.loss{
+    color:red;
+    font-size:26px;
+    font-weight:bold;
+}
+.details{
+    margin-top:12px;
+    color:#555;
+    line-height:1.6;
+}
+.total-preview{
+    margin-top:6px;
+    font-size:14px;
+    color:#666;
+}
+.loading{
+    color:#005eff;
+    font-weight:bold;
+}
+</style>
 </head>
 <body>
-
 <div class="calculator">
-
-  <h1>Profit Calculator</h1>
-
-  <!-- Selling Price -->
-  <div class="input-group">
-    <label>Selling Price</label>
-
-    <div class="input-row">
-      <input type="number" id="sellingPrice" placeholder="Price per item">
-
-      <input
-        type="number"
-        id="sellingQty"
-        class="qty"
-        placeholder="Qty"
-        value="1"
-      >
-
-      <select id="sellingCurrency" class="currency">
-        <option value="USD">USDT/USD</option>
-        <option value="GBP">GBP</option>
-        <option value="EUR">EUR</option>
-      </select>
-    </div>
-
-    <small>
-      Total:
-      <span id="sellingTotal">0.00</span>
-    </small>
-  </div>
-
-  <!-- Buying Price -->
-  <div class="input-group">
-    <label>Buying Price</label>
-
-    <div class="input-row">
-      <input type="number" id="buyingPrice" placeholder="Price per item">
-
-      <input
-        type="number"
-        id="buyingQty"
-        class="qty"
-        placeholder="Qty"
-        value="1"
-      >
-
-      <select id="buyingCurrency" class="currency">
-        <option value="USD">USDT/USD</option>
-        <option value="GBP">GBP</option>
-        <option value="EUR">EUR</option>
-      </select>
-    </div>
-
-    <small>
-      Total:
-      <span id="buyingTotal">0.00</span>
-    </small>
-  </div>
-
-  <!-- Ad Cost -->
-  <div class="input-group">
-    <label>Ad Cost</label>
-
-    <div class="input-row">
-      <input type="number" id="adCost" placeholder="Ad cost">
-
-      <select id="adCurrency" class="currency">
-        <option value="USD">USDT/USD</option>
-        <option value="GBP">GBP</option>
-        <option value="EUR">EUR</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Other Cost -->
-  <div class="input-group">
-    <label>Other Cost</label>
-
-    <div class="input-row">
-      <input type="number" id="otherCost" placeholder="Other cost">
-
-      <select id="otherCurrency" class="currency">
-        <option value="USD">USDT/USD</option>
-        <option value="GBP">GBP</option>
-        <option value="EUR">EUR</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Result Currency -->
-  <div class="input-group">
-    <label>Result Currency</label>
-
-    <select id="resultCurrency" style="width:100%;">
-      <option value="USD">USDT/USD</option>
-      <option value="GBP">GBP</option>
-      <option value="EUR">EUR</option>
-    </select>
-  </div>
-
-  <button onclick="calculateProfit()">
-    Calculate Profit
-  </button>
-
-  <div class="result" id="result">
-    Your result will appear here.
-  </div>
-
+<h1>Profit Calculator</h1>
+<!-- SELLING -->
+<div class="input-group">
+<label>Selling Price</label>
+<div class="input-row">
+<input type="number" id="sellingPrice" placeholder="Price per item">
+<input
+type="number"
+id="sellingQty"
+class="qty"
+placeholder="Qty"
+value="1"
+min="1"
+>
+<select id="sellingCurrency" class="currency">
+<option value="USD">USDT/USD</option>
+<option value="GBP">GBP</option>
+<option value="EUR">EUR</option>
+</select>
 </div>
-
+<div class="total-preview">
+Selling Total:
+<span id="sellingTotal">0.00</span>
+</div>
+</div>
+<!-- BUYING -->
+<div class="input-group">
+<label>Buying Price</label>
+<div class="input-row">
+<input type="number" id="buyingPrice" placeholder="Price per item">
+<input
+type="number"
+id="buyingQty"
+class="qty"
+placeholder="Qty"
+value="1"
+min="1"
+>
+<select id="buyingCurrency" class="currency">
+<option value="USD">USDT/USD</option>
+<option value="GBP">GBP</option>
+<option value="EUR">EUR</option>
+</select>
+</div>
+<div class="total-preview">
+Buying Total:
+<span id="buyingTotal">0.00</span>
+</div>
+</div>
+<!-- AD COST -->
+<div class="input-group">
+<label>Ad Cost</label>
+<div class="input-row">
+<input type="number" id="adCost" placeholder="Ad cost">
+<select id="adCurrency" class="currency">
+<option value="USD">USDT/USD</option>
+<option value="GBP">GBP</option>
+<option value="EUR">EUR</option>
+</select>
+</div>
+</div>
+<!-- OTHER COST -->
+<div class="input-group">
+<label>Other Cost</label>
+<div class="input-row">
+<input type="number" id="otherCost" placeholder="Other cost">
+<select id="otherCurrency" class="currency">
+<option value="USD">USDT/USD</option>
+<option value="GBP">GBP</option>
+<option value="EUR">EUR</option>
+</select>
+</div>
+</div>
+<!-- RESULT CURRENCY -->
+<div class="input-group">
+<label>Result Currency</label>
+<select id="resultCurrency" style="width:100%;">
+<option value="USD">USDT/USD</option>
+<option value="GBP">GBP</option>
+<option value="EUR">EUR</option>
+</select>
+</div>
+<button onclick="calculateProfit()">
+Calculate Profit
+</button>
+<div class="result" id="result">
+Your result will appear here.
+</div>
+</div>
 <script>
-
-  // LIVE TOTALS
-  function updateTotals() {
-
+// LIVE TOTALS
+function updateTotals(){
     const sellingPrice =
-      parseFloat(document.getElementById("sellingPrice").value) || 0;
-
+    parseFloat(document.getElementById("sellingPrice").value) || 0;
     const sellingQty =
-      parseFloat(document.getElementById("sellingQty").value) || 1;
-
+    parseFloat(document.getElementById("sellingQty").value) || 1;
     const buyingPrice =
-      parseFloat(document.getElementById("buyingPrice").value) || 0;
-
+    parseFloat(document.getElementById("buyingPrice").value) || 0;
     const buyingQty =
-      parseFloat(document.getElementById("buyingQty").value) || 1;
-
+    parseFloat(document.getElementById("buyingQty").value) || 1;
     document.getElementById("sellingTotal").innerText =
-      (sellingPrice * sellingQty).toFixed(2);
-
+    (sellingPrice * sellingQty).toFixed(2);
     document.getElementById("buyingTotal").innerText =
-      (buyingPrice * buyingQty).toFixed(2);
-  }
-
-  document.addEventListener("input", updateTotals);
-
-  // GET EXCHANGE RATE
-  async function getExchangeRate(from, to) {
-
-    if (from === to) return 1;
-
-    try {
-
-      const response = await fetch(
-        `https://api.exchangerate.host/convert?from=${from}&to=${to}`
-      );
-
-      const data = await response.json();
-
-      return data.result;
-
-    } catch (error) {
-
-      alert("Currency conversion failed.");
-
-      return 1;
+    (buyingPrice * buyingQty).toFixed(2);
+}
+document.addEventListener("input", updateTotals);
+// GET EXCHANGE RATE
+async function getExchangeRate(from,to){
+    if(from === to){
+        return 1;
     }
-  }
-
-  // CONVERT CURRENCY
-  async function convertCurrency(amount, from, to) {
-
+    try{
+        // FREE OPEN API
+        const response = await fetch(
+        `https://open.er-api.com/v6/latest/${from}`
+        );
+        const data = await response.json();
+        return data.rates[to];
+    }catch(error){
+        alert("Currency conversion failed");
+        return 1;
+    }
+}
+// CONVERT
+async function convertCurrency(amount,from,to){
     const rate =
-      await getExchangeRate(from, to);
-
+    await getExchangeRate(from,to);
     return amount * rate;
-  }
-
-  // MAIN CALCULATION
-  async function calculateProfit() {
-
-    const resultCurrency =
-      document.getElementById("resultCurrency").value;
-
+}
+// MAIN CALCULATION
+async function calculateProfit(){
+    const resultBox =
+    document.getElementById("result");
+    resultBox.innerHTML =
+    `<div class="loading">Calculating...</div>`;
     // SELLING
     const sellingPrice =
-      parseFloat(document.getElementById("sellingPrice").value) || 0;
-
+    parseFloat(document.getElementById("sellingPrice").value) || 0;
     const sellingQty =
-      parseFloat(document.getElementById("sellingQty").value) || 1;
-
+    parseFloat(document.getElementById("sellingQty").value) || 1;
     const sellingTotal =
-      sellingPrice * sellingQty;
-
+    sellingPrice * sellingQty;
     // BUYING
     const buyingPrice =
-      parseFloat(document.getElementById("buyingPrice").value) || 0;
-
+    parseFloat(document.getElementById("buyingPrice").value) || 0;
     const buyingQty =
-      parseFloat(document.getElementById("buyingQty").value) || 1;
-
+    parseFloat(document.getElementById("buyingQty").value) || 1;
     const buyingTotal =
-      buyingPrice * buyingQty;
-
+    buyingPrice * buyingQty;
     // OTHER COSTS
     const adCost =
-      parseFloat(document.getElementById("adCost").value) || 0;
-
+    parseFloat(document.getElementById("adCost").value) || 0;
     const otherCost =
-      parseFloat(document.getElementById("otherCost").value) || 0;
-
+    parseFloat(document.getElementById("otherCost").value) || 0;
     // CURRENCIES
     const sellingCurrency =
-      document.getElementById("sellingCurrency").value;
-
+    document.getElementById("sellingCurrency").value;
     const buyingCurrency =
-      document.getElementById("buyingCurrency").value;
-
+    document.getElementById("buyingCurrency").value;
     const adCurrency =
-      document.getElementById("adCurrency").value;
-
+    document.getElementById("adCurrency").value;
     const otherCurrency =
-      document.getElementById("otherCurrency").value;
-
+    document.getElementById("otherCurrency").value;
+    const resultCurrency =
+    document.getElementById("resultCurrency").value;
     // CONVERT EVERYTHING
-    const sellingConverted =
-      await convertCurrency(
+    const revenue =
+    await convertCurrency(
         sellingTotal,
         sellingCurrency,
         resultCurrency
-      );
-
-    const buyingConverted =
-      await convertCurrency(
+    );
+    const buyCost =
+    await convertCurrency(
         buyingTotal,
         buyingCurrency,
         resultCurrency
-      );
-
+    );
     const adConverted =
-      await convertCurrency(
+    await convertCurrency(
         adCost,
         adCurrency,
         resultCurrency
-      );
-
+    );
     const otherConverted =
-      await convertCurrency(
+    await convertCurrency(
         otherCost,
         otherCurrency,
         resultCurrency
-      );
-
+    );
     // TOTAL COST
     const totalCost =
-      buyingConverted +
-      adConverted +
-      otherConverted;
-
-    // FINAL PROFIT
+    buyCost +
+    adConverted +
+    otherConverted;
+    // PROFIT
     const profit =
-      sellingConverted - totalCost;
-
-    const resultDiv =
-      document.getElementById("result");
-
-    // DISPLAY RESULT
-    if (profit > 0) {
-
-      resultDiv.innerHTML = `
+    revenue - totalCost;
+    // DISPLAY
+    if(profit > 0){
+        resultBox.innerHTML = `
         <div class="profit">
-          Profit: ${profit.toFixed(2)} ${resultCurrency}
+        Profit: ${profit.toFixed(2)} ${resultCurrency}
         </div>
-
         <div class="details">
-          Revenue:
-          ${sellingConverted.toFixed(2)} ${resultCurrency}
-          <br><br>
-
-          Total Cost:
-          ${totalCost.toFixed(2)} ${resultCurrency}
+        Revenue:
+        ${revenue.toFixed(2)} ${resultCurrency}
+        <br><br>
+        Total Cost:
+        ${totalCost.toFixed(2)} ${resultCurrency}
         </div>
-      `;
-
-    } else if (profit < 0) {
-
-      resultDiv.innerHTML = `
+        `;
+    }else if(profit < 0){
+        resultBox.innerHTML = `
         <div class="loss">
-          Loss: ${Math.abs(profit).toFixed(2)} ${resultCurrency}
+        Loss: ${Math.abs(profit).toFixed(2)} ${resultCurrency}
         </div>
-
         <div class="details">
-          Revenue:
-          ${sellingConverted.toFixed(2)} ${resultCurrency}
-          <br><br>
-
-          Total Cost:
-          ${totalCost.toFixed(2)} ${resultCurrency}
+        Revenue:
+        ${revenue.toFixed(2)} ${resultCurrency}
+        <br><br>
+        Total Cost:
+        ${totalCost.toFixed(2)} ${resultCurrency}
         </div>
-      `;
-
-    } else {
-
-      resultDiv.innerHTML = `
+        `;
+    }else{
+        resultBox.innerHTML = `
         <div class="details">
-          No Profit No Loss
+        No Profit No Loss
         </div>
-      `;
+        `;
     }
-  }
-
+}
 </script>
-
 </body>
 </html>
